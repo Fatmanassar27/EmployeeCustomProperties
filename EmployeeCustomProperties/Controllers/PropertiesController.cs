@@ -9,9 +9,9 @@ namespace EmployeeCustomProperties.Controllers
 {
     public class PropertiesController : Controller
     {
-        private readonly PropertyService _propertyService;
+        private readonly IPropertyService _propertyService;
 
-        public PropertiesController(PropertyService propertyService)
+        public PropertiesController(IPropertyService propertyService)
         {
             _propertyService = propertyService;
         }

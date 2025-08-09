@@ -1,1 +1,59 @@
-﻿
+﻿@model EmployeeCustomProperties.Models.Property
+
+@{
+    ViewData["Title"] = "Create Property";
+}
+
+<h2>Create Property</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Type"></label>
+        <select asp-for="Type" class="form-control" id="propertyType">
+            <option value="0">Date</option>
+            <option value="1">String</option>
+            <option value="2">Integer</option>
+            <option value="3">Dropdown</option>
+        </select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+
+    <!-- مكان إدخال القيم لو النوع Dropdown -->
+    <div class="form-group" id="dropdownOptionsContainer" style="display:none;">
+        <label>Dropdown Options</label>
+        <div id="optionsList">
+            <input type="text" name="dropdownOptions" class="form-control mb-2" placeholder="Enter option" />
+        </div>
+        <button type="button" id="addOption" class="btn btn-secondary">Add Another Option</button>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-3">Save</button>
+</form>
+
+@section Scripts {
+    <script>
+        document.getElementById("propertyType").addEventListener("change", function () {
+            let container = document.getElementById("dropdownOptionsContainer");
+            if (this.value == "3") { // 3 = Dropdown
+                container.style.display = "block";
+            } else {
+                container.style.display = "none";
+            }
+        });
+
+        document.getElementById("addOption").addEventListener("click", function () {
+            let newInput = document.createElement("input");
+            newInput.type = "text";
+            newInput.name = "dropdownOptions";
+            newInput.className = "form-control mb-2";
+            newInput.placeholder = "Enter option";
+            document.getElementById("optionsList").appendChild(newInput);
+        });
+    </script>
+}
