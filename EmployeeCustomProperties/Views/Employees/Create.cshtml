@@ -28,10 +28,13 @@
         <div class="form-group">
             <label>@prop.Name</label>
 
-            @if (prop.Type == EmployeeCustomProperties.Models.PropertyType.String ||
-           prop.Type == EmployeeCustomProperties.Models.PropertyType.Integer)
+            @if (prop.Type == EmployeeCustomProperties.Models.PropertyType.String )
             {
                 <input type="text" name="propertyValues[@prop.Id]" class="form-control" />
+            }
+            else if (prop.Type == EmployeeCustomProperties.Models.PropertyType.Integer)
+            {
+            <input type="number" name="propertyValues[@prop.Id]" class="form-control" />
             }
             else if (prop.Type == EmployeeCustomProperties.Models.PropertyType.Date)
             {
@@ -40,7 +43,7 @@
             else if (prop.Type == EmployeeCustomProperties.Models.PropertyType.Dropdown)
             {
                 <select name="propertyValues[@prop.Id]" class="form-control">
-                    <option value="">-- Select --</option>
+                    <option value="" disabled>-- Select --</option>
                     @foreach (var option in prop.DropdownOptions)
                     {
                         <option value="@option.Value">@option.Value</option>

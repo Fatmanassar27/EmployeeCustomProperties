@@ -9,12 +9,7 @@
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
-
-    <div class="form-group">
-        <label asp-for="Code"></label>
-        <input asp-for="Code" class="form-control" />
-        <span asp-validation-for="Code" class="text-danger"></span>
-    </div>
+    <input type="hidden" asp-for="Code" />
 
     <div class="form-group">
         <label asp-for="Name"></label>
