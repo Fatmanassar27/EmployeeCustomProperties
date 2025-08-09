@@ -12,5 +12,16 @@ namespace EmployeeCustomProperties.Data
         public DbSet<Property> Properties { get; set; }
         public DbSet<EmployeePropertyValue> EmployeePropertyValues { get; set; }
         public DbSet<DropdownValue> DropdownValues { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Employee>()
+                .HasIndex(e => e.Code)
+                .IsUnique();
+        }
+
     }
+
 }

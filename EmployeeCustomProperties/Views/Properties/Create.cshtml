@@ -6,7 +6,7 @@
 
 <h2>Create Property</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" id="propertyForm">
     <div class="form-group">
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
@@ -16,6 +16,7 @@
     <div class="form-group">
         <label asp-for="Type"></label>
         <select asp-for="Type" class="form-control" id="propertyType">
+            <option value="">-- Select Type --</option>
             <option value="0">Date</option>
             <option value="1">String</option>
             <option value="2">Integer</option>
@@ -24,36 +25,67 @@
         <span asp-validation-for="Type" class="text-danger"></span>
     </div>
 
-    <!-- مكان إدخال القيم لو النوع Dropdown -->
-    <div class="form-group" id="dropdownOptionsContainer" style="display:none;">
+    <div class="form-check">
+        <input asp-for="IsRequired" class="form-check-input" type="checkbox" />
+        <label asp-for="IsRequired" class="form-check-label"></label>
+    </div>
+
+    <!-- Dropdown options -->
+    <div class="form-group mt-3" id="dropdownOptionsContainer" style="display:none;">
         <label>Dropdown Options</label>
         <div id="optionsList">
             <input type="text" name="dropdownOptions" class="form-control mb-2" placeholder="Enter option" />
         </div>
-        <button type="button" id="addOption" class="btn btn-secondary">Add Another Option</button>
+        <button type="button" id="addOption" class="btn btn-secondary btn-sm">Add Another Option</button>
+        <div class="text-danger mt-2" id="dropdownError" style="display:none;">Please add at least one option.</div>
     </div>
 
     <button type="submit" class="btn btn-primary mt-3">Save</button>
 </form>
 
 @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
     <script>
-        document.getElementById("propertyType").addEventListener("change", function () {
-            let container = document.getElementById("dropdownOptionsContainer");
-            if (this.value == "3") { // 3 = Dropdown
-                container.style.display = "block";
+        const propertyType = document.getElementById("propertyType");
+        const dropdownOptionsContainer = document.getElementById("dropdownOptionsContainer");
+        const addOptionBtn = document.getElementById("addOption");
+        const optionsList = document.getElementById("optionsList");
+        const form = document.getElementById("propertyForm");
+        const dropdownError = document.getElementById("dropdownError");
+
+        // Show/hide dropdown options based on type
+        propertyType.addEventListener("change", function () {
+            if (this.value == "3") {
+                dropdownOptionsContainer.style.display = "block";
             } else {
-                container.style.display = "none";
+                dropdownOptionsContainer.style.display = "none";
+                dropdownError.style.display = "none";
             }
         });
 
-        document.getElementById("addOption").addEventListener("click", function () {
+        // Add new option input
+        addOptionBtn.addEventListener("click", function () {
             let newInput = document.createElement("input");
             newInput.type = "text";
             newInput.name = "dropdownOptions";
             newInput.className = "form-control mb-2";
             newInput.placeholder = "Enter option";
-            document.getElementById("optionsList").appendChild(newInput);
+            optionsList.appendChild(newInput);
+        });
+
+        // Client-side validation for dropdown options
+        form.addEventListener("submit", function (e) {
+            if (propertyType.value == "3") {
+                let optionInputs = document.querySelectorAll("input[name='dropdownOptions']");
+                let hasValue = Array.from(optionInputs).some(input => input.value.trim() !== "");
+                if (!hasValue) {
+                    e.preventDefault();
+                    dropdownError.style.display = "block";
+                } else {
+                    dropdownError.style.display = "none";
+                }
+            }
         });
     </script>
 }

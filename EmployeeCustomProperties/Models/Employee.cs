@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using EmployeeCustomProperties.Validation;
 
 namespace EmployeeCustomProperties.Models
 {
@@ -8,6 +9,7 @@ namespace EmployeeCustomProperties.Models
 
         [Required(ErrorMessage = "Please enter the employee code.")]
         [StringLength(20, ErrorMessage = "Code cannot exceed 20 characters.")]
+        [Unique]
         public string Code { get; set; }
 
         [Required(ErrorMessage = "Please enter the employee name.")]

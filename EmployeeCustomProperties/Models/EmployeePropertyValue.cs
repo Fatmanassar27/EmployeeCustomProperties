@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeeCustomProperties.Models
 {
     public class EmployeePropertyValue
     {
         public int Id { get; set; }
+
+        [Required(ErrorMessage = "Value is required.")]
         public string Value { get; set; } = string.Empty;
 
         [ForeignKey("Employee")]
@@ -14,6 +17,5 @@ namespace EmployeeCustomProperties.Models
         [ForeignKey("Property")]
         public int PropertyId { get; set; }
         public Property Property { get; set; }
-
     }
 }
