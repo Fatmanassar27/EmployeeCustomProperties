@@ -12,31 +12,31 @@ namespace EmployeeCustomProperties.Services
             _employeeRepository = employeeRepository;
         }
 
-        public async Task<IEnumerable<Employee>> GetAllEmployeesAsync()
+        public async Task<IEnumerable<Employee>> GetAllEmployeesWithPropertiesAsync()
         {
-            return await _employeeRepository.GetAllAsync();
+            return await _employeeRepository.GetAllWithPropertiesAsync();
         }
 
-        public async Task<Employee> GetEmployeeByIdAsync(int id)
-        {
-            return await _employeeRepository.GetByIdAsync(id);
-        }
-
-        public async Task AddEmployeeAsync(Employee employee)
+        public async Task AddEmployeeAsync(Employee employee, Dictionary<int, string> propertyValues)
         {
             await _employeeRepository.AddAsync(employee);
             await _employeeRepository.SaveAsync();
-        }
 
-        public async Task UpdateEmployeeAsync(Employee employee)
-        {
-            await _employeeRepository.UpdateAsync(employee);
-            await _employeeRepository.SaveAsync();
-        }
+            foreach (var prop in propertyValues)
+            {
+                if (string.IsNullOrWhiteSpace(prop.Value))
+                    continue;
 
-        public async Task DeleteEmployeeAsync(int id)
-        {
-            await _employeeRepository.DeleteAsync(id);
+                var value = new EmployeePropertyValue
+                {
+                    EmployeeId = employee.Id,
+                    PropertyId = prop.Key,
+                    Value = prop.Value
+                };
+
+                await _employeeRepository.AddEmployeePropertyValueAsync(value);
+            }
+
             await _employeeRepository.SaveAsync();
         }
     }

@@ -1,4 +1,5 @@
 ﻿using EmployeeCustomProperties.Data;
+using EmployeeCustomProperties.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeCustomProperties.Repositories.Employee
@@ -12,14 +13,12 @@ namespace EmployeeCustomProperties.Repositories.Employee
             _context = context;
         }
 
-        public async Task<IEnumerable<Models.Employee>> GetAllAsync()
+        public async Task<IEnumerable<Models.Employee>> GetAllWithPropertiesAsync()
         {
-            return await _context.Employees.ToListAsync();
-        }
-
-        public async Task<Models.Employee> GetByIdAsync(int id)
-        {
-            return await _context.Employees.FindAsync(id);
+            return await _context.Employees
+                .Include(e => e.PropertyValues)
+                .ThenInclude(v => v.Property)
+                .ToListAsync();
         }
 
         public async Task AddAsync(Models.Employee employee)
@@ -27,16 +26,9 @@ namespace EmployeeCustomProperties.Repositories.Employee
             await _context.Employees.AddAsync(employee);
         }
 
-        public async Task UpdateAsync(Models.Employee employee)
+        public async Task AddEmployeePropertyValueAsync(EmployeePropertyValue value)
         {
-            _context.Employees.Update(employee);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            var emp = await GetByIdAsync(id);
-            if (emp != null)
-                _context.Employees.Remove(emp);
+            await _context.EmployeePropertyValues.AddAsync(value);
         }
 
         public async Task SaveAsync()
