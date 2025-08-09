@@ -1,5 +1,6 @@
 using EmployeeCustomProperties.Data;
 using EmployeeCustomProperties.Repositories.Employee;
+using EmployeeCustomProperties.Repositories.Property;
 using EmployeeCustomProperties.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,6 +20,10 @@ namespace EmployeeCustomProperties
 
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             builder.Services.AddScoped<EmployeeService>();
+
+            builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
+            builder.Services.AddScoped<PropertyService>();
+
 
 
             var app = builder.Build();
