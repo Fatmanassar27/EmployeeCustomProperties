@@ -1,4 +1,6 @@
 using EmployeeCustomProperties.Data;
+using EmployeeCustomProperties.Repositories.Employee;
+using EmployeeCustomProperties.Services;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -14,6 +16,9 @@ namespace EmployeeCustomProperties
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<DBContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("CS")));
+
+            builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            builder.Services.AddScoped<EmployeeService>();
 
 
             var app = builder.Build();
