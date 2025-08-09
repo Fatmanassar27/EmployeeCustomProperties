@@ -1,0 +1,73 @@
+﻿@model EmployeeCustomProperties.Models.Employee
+
+@{
+    ViewData["Title"] = "Edit Employee";
+    var properties = ViewBag.Properties as List<EmployeeCustomProperties.Models.Property>;
+}
+
+<h2>Edit Employee</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Code"></label>
+        <input asp-for="Code" class="form-control" />
+        <span asp-validation-for="Code" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <hr />
+    <h4>Custom Properties</h4>
+
+    @foreach (var prop in properties)
+    {
+        var existingValue = Model.PropertyValues
+        ?.FirstOrDefault(v => v.PropertyId == prop.Id)?.Value;
+
+        <div class="form-group">
+            <label>@prop.Name</label>
+
+            @if (prop.Type == EmployeeCustomProperties.Models.PropertyType.String ||
+           prop.Type == EmployeeCustomProperties.Models.PropertyType.Integer)
+            {
+                <input type="text" name="propertyValues[@prop.Id]" value="@existingValue" class="form-control" />
+            }
+            else if (prop.Type == EmployeeCustomProperties.Models.PropertyType.Date)
+            {
+                <input type="date" name="propertyValues[@prop.Id]" value="@existingValue" class="form-control" />
+            }
+            else if (prop.Type == EmployeeCustomProperties.Models.PropertyType.Dropdown)
+            {
+                <select name="propertyValues[@prop.Id]" class="form-control">
+                    <option value="">-- Select --</option>
+                    @foreach (var option in prop.DropdownOptions)
+                    {
+                        <option value="@option.Value" selected="@(option.Value == existingValue)">
+                            @option.Value
+                        </option>
+                    }
+                </select>
+            }
+
+            @if (prop.IsRequired)
+            {
+                <span class="text-danger">* Required</span>
+            }
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

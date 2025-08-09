@@ -1,0 +1,51 @@
+﻿@model IEnumerable<EmployeeCustomProperties.Models.Employee>
+
+@{
+    ViewData["Title"] = "Employees List";
+}
+
+<h2>Employees</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Employee</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Code</th>
+            <th>Name</th>
+            <th>Properties</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var emp in Model)
+{
+        <tr>
+            <td>@emp.Code</td>
+            <td>@emp.Name</td>
+            <td>
+                @if (emp.PropertyValues != null && emp.PropertyValues.Any())
+                {
+                    <ul>
+                        @foreach (var prop in emp.PropertyValues)
+                        {
+                            <li><strong>@prop.Property.Name:</strong> @prop.Value</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <em>No properties assigned</em>
+                }
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@emp.Id" class="btn btn-sm btn-warning">Edit</a>
+                <a asp-action="Details" asp-route-id="@emp.Id" class="btn btn-sm btn-info">Details</a>
+                <a asp-action="Delete" asp-route-id="@emp.Id" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

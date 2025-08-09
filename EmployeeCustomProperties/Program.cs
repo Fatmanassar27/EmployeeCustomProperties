@@ -19,10 +19,10 @@ namespace EmployeeCustomProperties
             options.UseSqlServer(builder.Configuration.GetConnectionString("CS")));
 
             builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-            builder.Services.AddScoped<EmployeeService>();
+            builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
             builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
-            builder.Services.AddScoped<PropertyService>();
+            builder.Services.AddScoped<IPropertyService , PropertyService>();
 
 
 

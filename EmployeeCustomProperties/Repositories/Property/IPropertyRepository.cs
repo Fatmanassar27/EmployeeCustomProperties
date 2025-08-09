@@ -1,4 +1,7 @@
 ﻿using EmployeeCustomProperties.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace EmployeeCustomProperties.Repositories.Property
 {
     public interface IPropertyRepository

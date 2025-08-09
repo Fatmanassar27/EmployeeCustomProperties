@@ -1,9 +1,12 @@
 ﻿using EmployeeCustomProperties.Models;
 using EmployeeCustomProperties.Repositories.Property;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EmployeeCustomProperties.Services
 {
-    public class PropertyService
+    public class PropertyService : IPropertyService
     {
         private readonly IPropertyRepository _propertyRepository;
 

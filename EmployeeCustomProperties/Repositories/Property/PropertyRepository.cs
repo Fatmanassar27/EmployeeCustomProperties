@@ -1,5 +1,8 @@
 ﻿using EmployeeCustomProperties.Data;
+using EmployeeCustomProperties.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace EmployeeCustomProperties.Repositories.Property
 {
@@ -20,7 +23,7 @@ namespace EmployeeCustomProperties.Repositories.Property
         }
 
         public async Task AddAsync(Models.Property property)
-        {
+        {   
             await _context.Properties.AddAsync(property);
         }
 
