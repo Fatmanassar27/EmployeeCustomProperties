@@ -1,51 +1,101 @@
 ﻿@model IEnumerable<EmployeeCustomProperties.Models.Employee>
 
 @{
-    ViewData["Title"] = "Employees List";
+	ViewData["Title"] = "Employees List";
 }
 
-<h2>Employees</h2>
+<div class="card shadow-lg border-0 mt-4">
+	<div class="card-header text-white fw-bold d-flex justify-content-between align-items-center py-3" style="font-size:1.3rem;background-color : #253d90; font-size :x-large">
+		<span>👥 Employees</span>
+		<a asp-action="Create" class="btn btn-light btn-lg shadow-sm fw-semibold fs-5">
+			➕ Add New Employee
+		</a>
+	</div>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Add New Employee</a>
-</p>
+	<div class="card shadow-lg border-0">
+		<div class="card-body p-0">
+			<table class="table table-bordered table-striped table-hover align-middle mb-0" style="font-size:1.05rem;">
+				<thead class="bg-primary text-white" style="font-size:1.1rem;">
+					<tr>
+						<th style="width: 10%;color : #142047">Code</th>
+						<th style="width: 20%;color : #142047" ">Name</th>
+						<th style ="color : #142047">
+							Properties</th>
+						<th style="width: 20%; ;color : #142047" class="text-center">Actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					@if (Model != null && Model.Any())
+					{
+						@foreach (var emp in Model)
+						{
+							<tr>
+								<td class="fw-semibold">@emp.Code</td>
+								<td>@emp.Name</td>
+								<td>
+									@if (emp.PropertyValues != null && emp.PropertyValues.Any())
+									{
+										<ul class="mb-0">
+											@foreach (var prop in emp.PropertyValues)
+											{
+												<li>
+													<strong>@prop.Property.Name:</strong> @prop.Value
+												</li>
+											}
+										</ul>
+									}
+									else
+									{
+										<em class="text-muted">No properties assigned</em>
+									}
+								</td>
+								<td class="text-center">
+									<a href="@Url.Action("Edit", "Employees", new { id = emp.Id })" class="btn shadow-sm  fs-6" style="background-color : #142047 ; color: azure ; width:150px">
+										✏ Edit
+									</a>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Properties</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var emp in Model)
-{
-        <tr>
-            <td>@emp.Code</td>
-            <td>@emp.Name</td>
-            <td>
-                @if (emp.PropertyValues != null && emp.PropertyValues.Any())
-                {
-                    <ul>
-                        @foreach (var prop in emp.PropertyValues)
-                        {
-                            <li><strong>@prop.Property.Name:</strong> @prop.Value</li>
-                        }
-                    </ul>
-                }
-                else
-                {
-                    <em>No properties assigned</em>
-                }
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@emp.Id" class="btn btn-sm btn-warning">Edit</a>
-                <a asp-action="Details" asp-route-id="@emp.Id" class="btn btn-sm btn-info">Details</a>
-                <a asp-action="Delete" asp-route-id="@emp.Id" class="btn btn-sm btn-danger">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+								</td>
+							</tr>
+						}
+					}
+					else
+					{
+						<tr>
+							<td colspan="4" class="text-center text-muted py-4" style="font-size:1.1rem;">
+								No employees available.
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<style>
+	.table th, .table td {
+		vertical-align: middle !important;
+		padding: 0.9rem 1rem;
+	}
+
+	.table-hover tbody tr:hover {
+		background-color: #eef5ff !important;
+		transition: 0.2s ease-in-out;
+	}
+
+	ul {
+		list-style: none;
+		padding-left: 0;
+		margin-bottom: 0;
+	}
+
+		ul li::before {
+			content: "• ";
+			color: #0d6efd;
+			font-weight: bold;
+		}
+
+	.btn {
+		border-radius: 8px;
+	}
+</style>

@@ -1,69 +1,104 @@
 ﻿@model EmployeeCustomProperties.Models.Employee
 
 @{
-    ViewData["Title"] = "Create Employee";
-    var properties = ViewBag.Properties as List<EmployeeCustomProperties.Models.Property>;
+	ViewData["Title"] = "Create Employee";
+	var properties = ViewBag.Properties as List<EmployeeCustomProperties.Models.Property>;
 }
 
-<h2>Create Employee</h2>
+<div class="d-flex justify-content-center mt-4">
+	<div class="card shadow-sm border-0" style="width: 50rem;">
+		<div class="card-header text-white fw-bold text-center" style="background-color : #253d90 ; font-size :x-large">
+			➕ Create Employee
+		</div>
+		<div class="card-body">
+			<form asp-action="Create" method="post">
+				<!-- Employee Code -->
+				<div class="mb-3">
+					<label asp-for="Code" class="form-label fw-semibold"></label>
+					<input asp-for="Code" class="form-control" placeholder="Enter employee code" />
+					<span asp-validation-for="Code" class="text-danger small"></span>
+				</div>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Code"></label>
-        <input asp-for="Code" class="form-control" />
-        <span asp-validation-for="Code" class="text-danger"></span>
-    </div>
+				<!-- Employee Name -->
+				<div class="mb-3">
+					<label asp-for="Name" class="form-label fw-semibold"></label>
+					<input asp-for="Name" class="form-control" placeholder="Enter employee name" />
+					<span asp-validation-for="Name" class="text-danger small"></span>
+				</div>
 
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
+				<hr class="my-4" />
 
-    <hr />
-    <h4>Custom Properties</h4>
+				<!-- Custom Properties -->
+				<h5 class="fw-bold text-secondary mb-3">⚙ Custom Properties</h5>
 
-    @foreach (var prop in properties)
-    {
-        <div class="form-group">
-            <label>@prop.Name</label>
+				@foreach (var prop in properties)
+				{
+					var fieldName = $"propertyValues[{prop.Id}]";
+					<div class="mb-3">
+						<label class="form-label fw-semibold">@prop.Name</label>
+						@if (prop.IsRequired)
+						{
+							<span class="text-danger small d-inline mt-1">*</span>
+						}
 
-            @if (prop.Type == EmployeeCustomProperties.Models.PropertyType.String )
-            {
-                <input type="text" name="propertyValues[@prop.Id]" class="form-control" />
-            }
-            else if (prop.Type == EmployeeCustomProperties.Models.PropertyType.Integer)
-            {
-            <input type="number" name="propertyValues[@prop.Id]" class="form-control" />
-            }
-            else if (prop.Type == EmployeeCustomProperties.Models.PropertyType.Date)
-            {
-                <input type="date" name="propertyValues[@prop.Id]" class="form-control" />
-            }
-            else if (prop.Type == EmployeeCustomProperties.Models.PropertyType.Dropdown)
-            {
-                <select name="propertyValues[@prop.Id]" class="form-control">
-                    <option value="" disabled>-- Select --</option>
-                    @foreach (var option in prop.DropdownOptions)
-                    {
-                        <option value="@option.Value">@option.Value</option>
-                    }
-                </select>
-            }
 
-            @if (prop.IsRequired)
-            {
-                <span class="text-danger">* Required</span>
-            }
-        </div>
-    }
+						@if (prop.Type == EmployeeCustomProperties.Models.PropertyType.String)
+						{
+							<input type="text" name="@fieldName" class="form-control" placeholder="Enter value" />
+						}
+						else if (prop.Type == EmployeeCustomProperties.Models.PropertyType.Integer)
+						{
+							<input type="number" name="@fieldName" class="form-control" placeholder="Enter number" />
+						}
+						else if (prop.Type == EmployeeCustomProperties.Models.PropertyType.Date)
+						{
+							<input type="date" name="@fieldName" class="form-control" />
+						}
+						else if (prop.Type == EmployeeCustomProperties.Models.PropertyType.Dropdown)
+						{
+							<select name="@fieldName" class="form-select">
+								<option value="">-- Select --</option>
+								@foreach (var option in prop.DropdownOptions)
+								{
+									<option value="@option.Value">@option.Value</option>
+								}
+							</select>
+						}
 
-    <button type="submit" class="btn btn-success">Save</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+						@if (ViewData.ModelState.ContainsKey(fieldName) && ViewData.ModelState[fieldName].Errors.Count > 0)
+						{
+							<span class="text-danger small">
+								@ViewData.ModelState[fieldName].Errors[0].ErrorMessage
+							</span>
+						}
+					</div>
+				}
+
+
+				<!-- Buttons -->
+				<div class="d-flex justify-content-between">
+					<button type="submit" class="btn btn-success shadow-sm">
+						Save
+					</button>
+					<a asp-action="Index" class="btn btn-sm shadow-sm  fs-6 " style="background-color : #142047 ; color: azure ;">
+						Cancel
+					</a>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+	   { @await Html.PartialAsync("_ValidationScriptsPartial")}
 }
+
+<style>
+	.card-header {
+		font-size: 1.2rem;
+	}
+
+	input, select {
+		border-radius: 8px;
+	}
+</style>

@@ -30,14 +30,26 @@ namespace EmployeeCustomProperties.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Employee employee, Dictionary<int, string> propertyValues)
+        public async Task<IActionResult> Create(Employee employee, Dictionary<int, string>? propertyValues)
         {
+            ModelState.Remove("");
+            if ( propertyValues != null)
+            {
+                foreach (var property in propertyValues)
+                {
+                    var prop = await _propertyService.GetByIdAsync(property.Key);
+                    if (prop.IsRequired )
+                    {
+                        ModelState.AddModelError($"PropertyValues[{property.Key}]", $"{prop.Name} is required.");
+                    }
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 await _employeeService.AddEmployeeAsync(employee, propertyValues);
                 return RedirectToAction(nameof(Index));
             }
-
             await LoadPropertiesAsync();
             return View(employee);
         }
@@ -47,7 +59,7 @@ namespace EmployeeCustomProperties.Controllers
             var properties = await _propertyService.GetAllPropertiesWithDropdownsAsync();
             ViewBag.Properties = properties;
         }
-
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var employee = await _employeeService.GetEmployeeByIdAsync(id);
@@ -61,6 +73,17 @@ namespace EmployeeCustomProperties.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Employee employee, Dictionary<int, string> propertyValues)
         {
+            if (propertyValues != null)
+            {
+                foreach (var property in propertyValues)
+                {
+                    var prop = await _propertyService.GetByIdAsync(property.Key);
+                    if (prop.IsRequired)
+                    {
+                        ModelState.AddModelError($"PropertyValues[{property.Key}]", $"{prop.Name} is required.");
+                    }
+                }
+            }
             if (ModelState.IsValid)
             {
                 await _employeeService.UpdateEmployeeAsync(employee, propertyValues);

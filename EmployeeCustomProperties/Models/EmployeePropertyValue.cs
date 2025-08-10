@@ -7,8 +7,8 @@ namespace EmployeeCustomProperties.Models
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Value is required.")]
-        public string Value { get; set; } = string.Empty;
+        //[Required(ErrorMessage = "Value is required.")]
+        public string? Value { get; set; } = string.Empty;
 
         [ForeignKey("Employee")]
         public int EmployeeId { get; set; }

@@ -24,6 +24,7 @@ namespace EmployeeCustomProperties
             builder.Services.AddScoped<IPropertyRepository, PropertyRepository>();
             builder.Services.AddScoped<IPropertyService , PropertyService>();
 
+            builder.Services.AddHttpContextAccessor();
 
 
             var app = builder.Build();

@@ -4,40 +4,89 @@
     ViewData["Title"] = "Properties";
 }
 
-<h2>Properties</h2>
+<div class="card shadow-lg border-0 mt-4">
+    <div class="card-header text-white fw-bold d-flex justify-content-between align-items-center py-3" style="font-size:1.3rem;background-color : #253d90; font-size :x-large">
+        <span>📋 Properties</span>
+        <a asp-action="Create" class="btn btn-light btn-lg shadow-sm fw-semibold fs-5">
+            ➕ Add New Property
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Add New Property</a>
-</p>
-
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Required</th>
-            <th>Dropdown Options</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var property in Model)
-        {
-            <tr>
-                <td>@property.Name</td>
-                <td>@property.Type</td>
-                <td>@(property.IsRequired ? "Yes" : "No")</td>
-                <td>
-                    @if (property.Type == PropertyType.Dropdown && property.DropdownOptions != null && property.DropdownOptions.Any())
+    <div class="card-body p-0">
+        <table class="table table-bordered table-striped table-hover align-middle mb-0" style="font-size:1.05rem;">
+            <thead class="bg-light fw-bold" style="font-size:1.1rem">
+                <tr>
+                    <th style="width: 25%;color : #142047">Name</th>
+                    <th style="width: 15%;color : #142047">Type</th>
+                    <th style="width: 10%;color : #142047">Required</th>
+                    <th style="text-align: center;color : #142047">Dropdown Options</th>
+                </t>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var property in Model)
                     {
-                        <ul>
-                            @foreach (var option in property.DropdownOptions)
-                            {
-                                <li>@option.Value</li>
-                            }
-                        </ul>
+                        <tr>
+                            <td class="fw-semibold">@property.Name</td>
+                            <td>
+                                <span class="badge text-light px-3 py-2" style="font-size:0.95rem;background-color : #253d90">
+                                    @property.Type
+                                </span>
+                            </td>
+                            <td>
+                                @if (property.IsRequired)
+                                {
+                                    <span class="badge bg-success px-3 py-2" style="font-size:0.95rem;">Yes</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary px-3 py-2" style="font-size:0.95rem;">No</span>
+                                }
+                            </td>
+                            <td>
+                                @if (property.Type == PropertyType.Dropdown && property.DropdownOptions != null && property.DropdownOptions.Any())
+                                {
+                                    <ul class="list-unstyled mb-0">
+                                        @foreach (var option in property.DropdownOptions)
+                                        {
+                                            <li>• @option.Value</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <em class="text-muted">N/A</em>
+                                }
+                            </td>
+                        </tr>
                     }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4" style="font-size:1.1rem;">
+                            No properties available.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .table th, .table td {
+        vertical-align: middle !important;
+        padding: 0.9rem 1rem;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #eef5ff !important;
+        transition: 0.2s ease-in-out;
+    }
+
+    .badge {
+        border-radius: 12px;
+    }
+</style>

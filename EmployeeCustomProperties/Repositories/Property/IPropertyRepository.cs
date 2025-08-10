@@ -8,6 +8,9 @@ namespace EmployeeCustomProperties.Repositories.Property
     {
         Task<IEnumerable<Models.Property>> GetAllWithDropdownsAsync();
         Task AddAsync(Models.Property property);
+        Task<Models.Property?> GetByIdAsync(int id);
+        Task UpdateAsync(Models.Property property);
+        Task DeleteAsync(int id);
         Task SaveAsync();
     }
 }

@@ -4,88 +4,99 @@
     ViewData["Title"] = "Create Property";
 }
 
-<h2>Create Property</h2>
-
-<form asp-action="Create" method="post" id="propertyForm">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Type"></label>
-        <select asp-for="Type" class="form-control" id="propertyType">
-            <option value="">-- Select Type --</option>
-            <option value="0">Date</option>
-            <option value="1">String</option>
-            <option value="2">Integer</option>
-            <option value="3">Dropdown</option>
-        </select>
-        <span asp-validation-for="Type" class="text-danger"></span>
-    </div>
-
-    <div class="form-check">
-        <input asp-for="IsRequired" class="form-check-input" type="checkbox" />
-        <label asp-for="IsRequired" class="form-check-label"></label>
-    </div>
-
-    <!-- Dropdown options -->
-    <div class="form-group mt-3" id="dropdownOptionsContainer" style="display:none;">
-        <label>Dropdown Options</label>
-        <div id="optionsList">
-            <input type="text" name="dropdownOptions" class="form-control mb-2" placeholder="Enter option" />
+<div class="d-flex justify-content-center mt-4">
+    <div class="card shadow-sm border-0" style="width: 50rem;">
+        <div class="card-header text-white fw-bold text-center" style="background-color : #253d90 ; font-size :x-large">
+            ➕ Create Property
         </div>
-        <button type="button" id="addOption" class="btn btn-secondary btn-sm">Add Another Option</button>
-        <div class="text-danger mt-2" id="dropdownError" style="display:none;">Please add at least one option.</div>
+
+        <div class="card-body">
+            <form asp-action="Create" method="post" id="propertyForm">
+                <!-- Property Name -->
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- Property Type -->
+                <div class="mb-3">
+                    <label asp-for="Type" class="form-label"></label>
+                    <select asp-for="Type" class="form-select" id="propertyType">
+                        <option value= null>-- Select Type --</option>
+                        <option value="0">Date</option>
+                        <option value="1">String</option>
+                        <option value="2">Integer</option>
+                        <option value="3">Dropdown</option>
+                    </select>
+                    <span asp-validation-for="Type" class="text-danger"></span>
+                </div>
+
+                <!-- Is Required -->
+                <div class="form-check mb-3">
+                    <input asp-for="IsRequired" class="form-check-input" type="checkbox" />
+                    <label asp-for="IsRequired" class="form-check-label"></label>
+                </div>
+
+                <!-- Dropdown Options -->
+                <div class="mb-3" id="dropdownOptionsContainer" style="display:none;">
+                    <label class="form-label">Dropdown Options</label>
+                    <div id="optionsList">
+                        <input type="text" name="dropdownOptions" class="form-control mb-2" placeholder="Enter option" />
+                    </div>
+                    <button type="button" id="addOption" class="btn btn-outline-secondary btn-sm">+ Add Option</button>
+                    <div class="text-danger mt-2" id="dropdownError" style="display:none;">Please add at least one option.</div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="d-flex justify-content-between" >
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 
-    <button type="submit" class="btn btn-primary mt-3">Save</button>
-</form>
+<partial name="_ValidationScriptsPartial" />
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+<script>
+    const propertyType = document.getElementById("propertyType");
+    const dropdownOptionsContainer = document.getElementById("dropdownOptionsContainer");
+    const addOptionBtn = document.getElementById("addOption");
+    const optionsList = document.getElementById("optionsList");
+    const form = document.getElementById("propertyForm");
+    const dropdownError = document.getElementById("dropdownError");
 
-    <script>
-        const propertyType = document.getElementById("propertyType");
-        const dropdownOptionsContainer = document.getElementById("dropdownOptionsContainer");
-        const addOptionBtn = document.getElementById("addOption");
-        const optionsList = document.getElementById("optionsList");
-        const form = document.getElementById("propertyForm");
-        const dropdownError = document.getElementById("dropdownError");
+    propertyType.addEventListener("change", function () {
+        dropdownOptionsContainer.style.display = (this.value === "3") ? "block" : "none";
+        if (this.value !== "3") dropdownError.style.display = "none";
+    });
 
-        // Show/hide dropdown options based on type
-        propertyType.addEventListener("change", function () {
-            if (this.value == "3") {
-                dropdownOptionsContainer.style.display = "block";
+    addOptionBtn.addEventListener("click", function () {
+        const lastInput = optionsList.querySelector("input:last-of-type");
+        if (lastInput && lastInput.value.trim() === "") {
+            alert("Please fill the last option before adding a new one.");
+            return;
+        }
+        const newInput = document.createElement("input");
+        newInput.type = "text";
+        newInput.name = "dropdownOptions";
+        newInput.className = "form-control mb-2";
+        newInput.placeholder = "Enter option";
+        optionsList.appendChild(newInput);
+    });
+
+    form.addEventListener("submit", function (e) {
+        if (propertyType.value === "3") {
+            const hasValue = [...optionsList.querySelectorAll("input[name='dropdownOptions']")]
+                .some(input => input.value.trim() !== "");
+            if (!hasValue) {
+                e.preventDefault();
+                dropdownError.style.display = "block";
             } else {
-                dropdownOptionsContainer.style.display = "none";
                 dropdownError.style.display = "none";
             }
-        });
-
-        // Add new option input
-        addOptionBtn.addEventListener("click", function () {
-            let newInput = document.createElement("input");
-            newInput.type = "text";
-            newInput.name = "dropdownOptions";
-            newInput.className = "form-control mb-2";
-            newInput.placeholder = "Enter option";
-            optionsList.appendChild(newInput);
-        });
-
-        // Client-side validation for dropdown options
-        form.addEventListener("submit", function (e) {
-            if (propertyType.value == "3") {
-                let optionInputs = document.querySelectorAll("input[name='dropdownOptions']");
-                let hasValue = Array.from(optionInputs).some(input => input.value.trim() !== "");
-                if (!hasValue) {
-                    e.preventDefault();
-                    dropdownError.style.display = "block";
-                } else {
-                    dropdownError.style.display = "none";
-                }
-            }
-        });
-    </script>
-}
+        }
+    });
+</script>

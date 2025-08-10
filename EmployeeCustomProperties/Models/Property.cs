@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using EmployeeCustomProperties.Validation;
 
 namespace EmployeeCustomProperties.Models
 {
@@ -12,11 +11,9 @@ namespace EmployeeCustomProperties.Models
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Please select the property type.")]
-        public PropertyType Type { get; set; }
+        public PropertyType? Type { get; set; }
 
         public bool IsRequired { get; set; } = false;
-
-        [DropdownOptionsRequired]
         public List<DropdownValue> DropdownOptions { get; set; } = new List<DropdownValue>();
     }
 }

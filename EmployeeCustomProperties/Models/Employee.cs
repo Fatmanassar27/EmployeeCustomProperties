@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using EmployeeCustomProperties.Validation;
+using System.Diagnostics.CodeAnalysis;
 
 namespace EmployeeCustomProperties.Models
 {
@@ -15,7 +15,7 @@ namespace EmployeeCustomProperties.Models
         [Required(ErrorMessage = "Please enter the employee name.")]
         [StringLength(100, ErrorMessage = "Name cannot exceed 100 characters.")]
         public string Name { get; set; }
-
-        public List<EmployeePropertyValue> PropertyValues { get; set; } = new List<EmployeePropertyValue>();
+        [AllowNull]
+        public List<EmployeePropertyValue>? PropertyValues { get; set; } = new List<EmployeePropertyValue>();
     }
 }

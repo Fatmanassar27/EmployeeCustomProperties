@@ -27,8 +27,9 @@ namespace EmployeeCustomProperties.Services
         public async Task AddEmployeeAsync(Employee employee, Dictionary<int, string> propertyValues)
         {
             await _employeeRepository.AddAsync(employee);
-            await _employeeRepository.SaveAsync(); 
-
+            await _employeeRepository.SaveAsync();
+            if (propertyValues == null)
+                propertyValues = new Dictionary<int, string>();
             foreach (var prop in propertyValues)
             {
                 if (string.IsNullOrWhiteSpace(prop.Value))
