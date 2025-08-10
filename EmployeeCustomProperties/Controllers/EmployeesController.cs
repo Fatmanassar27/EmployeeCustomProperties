@@ -33,12 +33,12 @@ namespace EmployeeCustomProperties.Controllers
         public async Task<IActionResult> Create(Employee employee, Dictionary<int, string>? propertyValues)
         {
             ModelState.Remove("");
-            if ( propertyValues != null)
+            if (propertyValues != null)
             {
                 foreach (var property in propertyValues)
                 {
                     var prop = await _propertyService.GetByIdAsync(property.Key);
-                    if (prop.IsRequired )
+                    if (prop.IsRequired && propertyValues[prop.Id] is null)
                     {
                         ModelState.AddModelError($"PropertyValues[{property.Key}]", $"{prop.Name} is required.");
                     }
@@ -78,7 +78,7 @@ namespace EmployeeCustomProperties.Controllers
                 foreach (var property in propertyValues)
                 {
                     var prop = await _propertyService.GetByIdAsync(property.Key);
-                    if (prop.IsRequired)
+                    if (prop.IsRequired && propertyValues[prop.Id] is null)
                     {
                         ModelState.AddModelError($"PropertyValues[{property.Key}]", $"{prop.Name} is required.");
                     }

@@ -2,9 +2,9 @@
 {
     public enum PropertyType
     {
+        Date,
         String,
         Integer,
-        Date,
         Dropdown
     }
 }
